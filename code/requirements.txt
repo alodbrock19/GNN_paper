@@ -1,0 +1,43 @@
+# Requirements for GNN Stock Prediction Project
+# Python dependencies for data collection, processing, and graph neural network training
+
+# ============================================================================
+# Core Data Processing Libraries
+# ============================================================================
+pandas>=1.5.0,<3.0.0
+numpy>=1.21.0,<2.0.0
+
+# ============================================================================
+# Financial Data Collection
+# ============================================================================
+# Yahoo Finance API wrapper for stock data
+yfinance>=0.2.0
+
+# HTTP requests for web scraping (S&P 100 ticker list from Wikipedia)
+requests>=2.28.0
+
+# ============================================================================
+# Deep Learning Framework
+# ============================================================================
+# PyTorch for GNN model training and graph operations
+torch>=2.0.0
+
+# ============================================================================
+# Graph Construction & Analysis
+# ============================================================================
+# Association rule mining (Apriori algorithm) for dynamic graph construction
+apyori>=1.1.2
+
+# ============================================================================
+# Utilities
+# ============================================================================
+# Progress bars for long-running data collection tasks
+tqdm>=4.64.0
+
+# ============================================================================
+# Notes
+# ============================================================================
+# Standard library modules (no installation needed):
+# - os (file system operations)
+# - datetime (date/time handling)
+

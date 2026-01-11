@@ -21,6 +21,7 @@ requests>=2.28.0
 # ============================================================================
 # PyTorch for GNN model training and graph operations
 torch>=2.0.0
+torch-geometric>=2.0.0
 
 # ============================================================================
 # Graph Construction & Analysis

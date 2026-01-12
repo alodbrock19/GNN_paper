@@ -73,6 +73,7 @@ def download_stock_data(tickers, start_date):
 
         # 1. Log Returns (The base feature)
         # We use Log Returns because they are additive and "more" stationary than prices
+        df["SimpleReturn"] = df["Close"].pct_change()
         df["LogReturn"] = np.log(1 + df["Close"].pct_change())
 
         # 2. Rolling Cumulative Returns (Features)
@@ -113,7 +114,7 @@ def download_stock_data(tickers, start_date):
         df.dropna(inplace=True)
 
         # Drop raw price columns (GNNs usually struggle with raw prices)
-        df.drop(columns=["Open", "High", "Low", "Volume", "Close"], errors='ignore', inplace=True)
+        df.drop(columns=["Open", "High", "Low", "Volume"], errors='ignore', inplace=True)
 
         processed_list.append(df)
 

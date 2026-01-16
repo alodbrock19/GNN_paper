@@ -4,7 +4,7 @@ from typing import Callable
 import pandas as pd
 import torch
 from torch_geometric.data import Dataset, Data
-from utils import get_graph_in_pyg_format
+from .utils import get_graph_in_pyg_format
 
 
 class SP100Stocks(Dataset):
@@ -14,6 +14,7 @@ class SP100Stocks(Dataset):
 	"""
 
 	def __init__(self, root: str = "../data/", values_file_name: str = "values.csv", adj_file_name: str = "adj.npy", past_window: int = 25, future_window: int = 1, force_reload: bool = False, transform: Callable = None):
+		self.root = root
 		self.values_file_name = values_file_name
 		self.adj_file_name = adj_file_name
 		self.past_window = past_window
@@ -37,8 +38,8 @@ class SP100Stocks(Dataset):
 
 	def process(self) -> None:
 		x, close_prices, edge_index, edge_weight = get_graph_in_pyg_format(
-			values_path='../data/values.csv',
-			adj_path='../data/adj.npy',
+			values_path=self.raw_paths[0],
+			adj_path=self.raw_paths[1],
 		)
 		timestamps = [
 			Data(
@@ -60,5 +61,5 @@ class SP100Stocks(Dataset):
 		return len(values.loc[values.index[0][0]]) - self.past_window - self.future_window
 
 	def get(self, idx: int) -> Data:
-		data = torch.load(osp.join(self.processed_dir, f'timestep_{idx}.pt'))
+		data = torch.load(osp.join(self.processed_dir, f'timestep_{idx}.pt'),weights_only=False)
 		return data

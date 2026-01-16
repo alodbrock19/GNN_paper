@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *.so
 
+# Processed data files
+*.pt
+*_[0-9].pt
+
 # Virtual environments
 .venv/
 venv/
@@ -27,4 +31,8 @@ logs/
 
 # OS metadata
 .DS_Store
+
+# Zone identifier
+*.zoneinfo
+*:Zone.Identifier
 

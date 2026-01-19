@@ -3,26 +3,21 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import SAGEConv
+from torch_geometric.utils import add_self_loops 
 
-# Import your custom modules
 from MST_sections.layers import AttentiveLSTM
 from MST_sections.fusion import FeatureFusion
 
 class MST_GNN(nn.Module):
-    """
-    The Full MST-GNN Architecture.
-    """
     def __init__(self, in_features, hidden_size, num_graph_layers=2, num_cross_layers=2):
         super(MST_GNN, self).__init__()
         
         # 1. Temporal Encoding
         self.att_lstm = AttentiveLSTM(in_features, hidden_size)
         
-        # 2. Spatial-Temporal Aggregation (The "Multilayer" part)
-        # We use a ModuleList to stack SageConv layers
+        # 2. Spatial-Temporal Aggregation
         self.convs = nn.ModuleList()
         for _ in range(num_graph_layers):
-            # SAGEConv aggregates neighbor info
             self.convs.append(SAGEConv(hidden_size, hidden_size))
             
         # 3. Feature Fusion
@@ -33,35 +28,30 @@ class MST_GNN(nn.Module):
             mlp_hidden_dims=[64]
         )
         
-        # 4. Final Prediction
-        # Projects the complex fused vector to 3 classes (Down, Neutral, Up)
-        self.predictor = nn.Linear(self.fusion.final_output_dim, 3)
+        # 4. Final Prediction (Single Head)
+        # Output size 1 for Binary Classification (Up/Down)
+        self.predictor = nn.Linear(self.fusion.final_output_dim, 1)
 
     def forward(self, x, edge_index):
-        """
-        x: (Batch_Size, Time_Steps, Features)
-        edge_index: (2, Num_Edges)
-        """
+        # ... (Step 0, 1, 2, 3 are identical to previous code) ...
         
-        # --- Step 1: Encode History ---
-        # Output: (Batch, Hidden)
+        # Step 0: Graph Prep
+        edge_index_with_loops, _ = add_self_loops(edge_index, num_nodes=x.size(0))
+
+        # Step 1: LSTM
         lstm_out = self.att_lstm(x) 
         
-        # --- Step 2: Aggregate Neighbors ---
+        # Step 2: SAGE Loop
         layer_outputs = []
         h = lstm_out
-        
         for conv in self.convs:
-            # Apply SageConv + Activation
-            # SAGEConv handles the "Spatial" aggregation.
-            # Passing 'h' (which contains LSTM history) handles the "Temporal" aspect.
-            h = F.relu(conv(h, edge_index))
-            
-            # Store this layer's output for the fusion block
+            h = F.relu(conv(h, edge_index_with_loops))
             layer_outputs.append(h)
             
-        # --- Step 3: Fuse Everything ---
+        # Step 3: Fusion
         fused_vector = self.fusion(lstm_out, layer_outputs)
         
-        # --- Step 4: Predict ---
+        # Step 4: Single Classification Output
+        # We return logits (raw scores). 
+        # The Sigmoid/Softmax will happen in the Loss Function (BCEWithLogitsLoss).
         return self.predictor(fused_vector)

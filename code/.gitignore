@@ -4,8 +4,7 @@ __pycache__/
 *.so
 
 # Processed data files
-*.pt
-*_[0-9].pt
+timestep_*.pt
 
 # Virtual environments
 .venv/
@@ -36,3 +35,5 @@ logs/
 *.zoneinfo
 *:Zone.Identifier
 
+# Events 
+events.out.tfevents.*

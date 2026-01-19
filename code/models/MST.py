@@ -5,8 +5,8 @@ import torch.nn.functional as F
 from torch_geometric.nn import SAGEConv
 from torch_geometric.utils import add_self_loops 
 
-from MST_sections.layers import AttentiveLSTM
-from MST_sections.fusion import FeatureFusion
+from .MST_sections.layers import AttentiveLSTM
+from .MST_sections.fusion import FeatureFusion
 
 class MST_GNN(nn.Module):
     def __init__(self, in_features, hidden_size, num_graph_layers=2, num_cross_layers=2):
@@ -32,11 +32,15 @@ class MST_GNN(nn.Module):
         # Output size 1 for Binary Classification (Up/Down)
         self.predictor = nn.Linear(self.fusion.final_output_dim, 1)
 
-    def forward(self, x, edge_index):
+    def forward(self, x, edge_index, edge_weight=None):
         # ... (Step 0, 1, 2, 3 are identical to previous code) ...
         
         # Step 0: Graph Prep
         edge_index_with_loops, _ = add_self_loops(edge_index, num_nodes=x.size(0))
+        
+        # Initialize edge_weight as zero tensor if not provided
+        #if edge_weight is None:
+        #    edge_weight = torch.zeros(edge_index_with_loops.size(1), device=x.device)
 
         # Step 1: LSTM
         lstm_out = self.att_lstm(x) 

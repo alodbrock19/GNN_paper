@@ -37,9 +37,12 @@ def test_iteration(model: nn.Module, criterion: nn.Module, test_dataloader: Data
 	:param measure_acc: Whether to measure accuracy or not (for classification tasks)
 	"""
 	model.eval()
+	device = next(model.parameters()).device # get model device: cpu or gpu
 	for idx, data in enumerate(test_dataloader):
+		data = data.to(device)
 		out = model(data.x, data.edge_index, data.edge_weight)
-		loss = criterion(out, data.y)
+		labels = (data.y > 0).float().view(-1, 1) #added for BCEWithLogitsLoss
+		loss = criterion(out, labels)
 		writer.add_scalar("Loss/Test Loss", loss.item(), epoch * len(test_dataloader) + idx)
 		if measure_acc:
 			acc = measure_accuracy(model, data)
@@ -59,10 +62,14 @@ def train_iteration(model: nn.Module, optimizer: optim.Optimizer, pbar: trange, 
 	:param measure_acc: Whether to measure accuracy or not (for classification tasks)
 	"""
 	model.train()
+	device = next(model.parameters()).device # get model device: cpu or gpu
 	for idx, data in enumerate(train_dataloader):
+		data = data.to(device)
 		optimizer.zero_grad()
 		out = model(data.x, data.edge_index, data.edge_weight)
-		loss = criterion(out, data.y)
+		labels = (data.y > 0).float().view(-1, 1) #added for BCEWithLogitsLoss
+		#loss = criterion(out, data.y)
+		loss = criterion(out, labels)
 		loss.backward()
 		optimizer.step()
 		pbar.set_postfix({"Batch": f"{(idx + 1) / len(train_dataloader) * 100:.1f}%"})

@@ -7,6 +7,7 @@ __pycache__/
 #timestep_*.pt
 #sp100_dynamic_mscmg.pt
 *.pt
+*.png
 
 # Virtual environments
 .venv/

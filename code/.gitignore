@@ -5,6 +5,8 @@ __pycache__/
 
 # Processed data files
 timestep_*.pt
+sp100_dynamic_mscmg.pt
+*.pt
 
 # Virtual environments
 .venv/

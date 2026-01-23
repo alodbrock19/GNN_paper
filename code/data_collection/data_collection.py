@@ -15,7 +15,7 @@ from ta.trend import macd
 
 START_DATE = "2023-01-01"
 
-DATA_PATH = "../data"
+DATA_PATH = "../data/raw"
 
 def get_sp100_tickers():
     """
@@ -109,6 +109,17 @@ def download_stock_data(tickers, start_date):
         if "MACD" not in df.columns:
             df["MACD"] = macd(df["Close"])
     
+        # Adding columns 
+        #Intraday Volatility: (High - Low) / Close
+        df["Intraday_Volatility"] = (df["High"] - df["Low"]) / df["Close"]
+        # Intraday Momentum: (Close - Open) / Open
+        df["Intraday_Momentum"] = (df["Close"] - df["Open"]) / df["Open"]
+        # Shadow Ratios
+        # Upper Shadow Ratio: (High - max(Open, Close)) / Close
+        df["Upper_Shadow_Ratio"] = (df["High"] - df[["Open", "Close"]].max(axis=1)) / df["Close"]
+        # Lower Shadow Ratio: (min(Open, Close) - Low) / Close
+        df["Lower_Shadow_Ratio"] = (df[["Open", "Close"]].min(axis=1) - df["Low"]) / df["Close"] 
+        
         # 6. Cleanup
         # Drop the first 60 rows because they will be NaN (due to the rolling window)
         df.dropna(inplace=True)

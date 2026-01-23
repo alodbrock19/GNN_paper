@@ -29,8 +29,9 @@ class TGCN(nn.Module):
 		:param edge_weight: The edge weight of the graph (Edges_nb,)
 		:return: The output of the model (Nodes_nb, OutFeatures_nb)
 		"""
+		device = x.device
 		h_prev = [
-			torch.zeros(x.shape[0], self.hidden_size) for _ in range(self.layers_nb)
+			torch.zeros(x.shape[0], self.hidden_size, device=device) for _ in range(self.layers_nb)
 		]
 		for t in range(x.shape[-1]):
 			h = x[:, :, t]  # h is the output of the previous GRU layer (the input features for the first layer)

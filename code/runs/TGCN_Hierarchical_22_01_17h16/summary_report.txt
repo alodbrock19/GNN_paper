@@ -1,0 +1,88 @@
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                    PHASE 2 HIERARCHICAL MULTI-TASK TGCN                 ║
+║                          TRAINING RESULTS                               ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+RUN INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Run Name:              TGCN_Hierarchical_22_01_17h16
+Timestamp:             2026-01-22 17:28:40
+Results Directory:     runs/TGCN_Hierarchical_22_01_17h16
+Model:                 TGCN_HierarchicalMT
+
+HYPERPARAMETERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Threshold (±):         0.55%
+Hidden Size:           16
+TGCN Layers:           2
+Learning Rate:         0.005
+Weight Decay:          1e-05
+Epochs:                100
+Batch Size:            32
+Lambda (Task Weight):  1.0
+
+OVERALL PERFORMANCE (3-CLASS: DOWN/NEUTRAL/UP)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Overall Accuracy:      34.81%
+Macro Avg Precision:   0.346
+Macro Avg Recall:      0.336
+Macro Avg F1-Score:    0.269
+
+Per-Class Performance:
+  Down:
+    Precision: 0.320
+    Recall:    0.202
+    F1-Score:  0.247
+  Neutral:
+    Precision: 0.365
+    Recall:    0.043
+    F1-Score:  0.077
+  Up:
+    Precision: 0.355
+    Recall:    0.764
+    F1-Score:  0.484
+
+TASK 1: SIGNAL DETECTION (NOISE VS SIGNAL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Signal Detection Accuracy: 65.97%
+  Noise:
+    Precision: 0.365
+    Recall:    0.043
+    F1-Score:  0.077
+  Signal:
+    Precision: 0.672
+    Recall:    0.963
+    F1-Score:  0.791
+
+TASK 2: DIRECTION PREDICTION (DOWN VS UP ON SIGNALS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Signal Samples Evaluated: 4557
+Direction Accuracy (on signals): 51.61%
+  Down:
+    Precision: 0.472
+    Recall:    0.207
+    F1-Score:  0.288
+  Up:
+    Precision: 0.528
+    Recall:    0.793
+    F1-Score:  0.634
+
+LOSS PROGRESSION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Initial Training Loss:   1.3487
+Final Training Loss:     1.3118
+Initial Test Loss:       1.3307
+Final Test Loss:         1.3427
+
+MODEL & DEVICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Parameters:        5,940
+Device:                  cuda
+Model Checkpoint:        models/saved_models/TGCN_Hierarchical_22_01_17h16_TGCN_HierarchicalMT.pt
+Results JSON:            runs/TGCN_Hierarchical_22_01_17h16/results.json
+Visualization:           runs/TGCN_Hierarchical_22_01_17h16/evaluation_results.png
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                         TRAINING COMPLETE                               ║
+╚══════════════════════════════════════════════════════════════════════════╝

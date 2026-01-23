@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import networkx as nx
 
-DATA_PATH = "../data/values.csv"
-OUTPUT_GRAPH_PATH = "../data/pearson_adj.npy"
+DATA_PATH = "../data/raw/values_crypto.csv"
+OUTPUT_GRAPH_PATH = "../data/pearson_adj_crypto.npy"
 THRESHOLD = 0.4
 
 def build_pearson_correlation_graph(values: pd.DataFrame, threshold: float = 0.5):

@@ -28,9 +28,9 @@ class MST_GNN(nn.Module):
             mlp_hidden_dims=[64]
         )
         
-        # 4. Final Prediction (Single Head)
-        # Output size 1 for Binary Classification (Up/Down)
-        self.predictor = nn.Linear(self.fusion.final_output_dim, 1)
+        # 4. Final Prediction Head
+        # Output size 3 for 3-class Classification (Downward, Neutral, Upward)
+        self.predictor = nn.Linear(self.fusion.final_output_dim, 3)
 
     def forward(self, x, edge_index, edge_weight=None):
         # ... (Step 0, 1, 2, 3 are identical to previous code) ...
@@ -55,7 +55,7 @@ class MST_GNN(nn.Module):
         # Step 3: Fusion
         fused_vector = self.fusion(lstm_out, layer_outputs)
         
-        # Step 4: Single Classification Output
-        # We return logits (raw scores). 
-        # The Sigmoid/Softmax will happen in the Loss Function (BCEWithLogitsLoss).
+        # Step 4: 3-class Classification Output
+        # We return logits (raw scores).
+        # The Softmax will happen in the Loss Function (CrossEntropyLoss).
         return self.predictor(fused_vector)

@@ -12,10 +12,10 @@ class TGCNCell(nn.Module):
 	"""
 	def __init__(self, in_channels: int, hidden_size: int, use_gat: bool = True):
 		super(TGCNCell, self).__init__()
-		#if use_gat:
-		#	self.gcn = GAT(in_channels, [hidden_size, hidden_size])
-		#else:
-		#	self.gcn = GCN(in_channels, [hidden_size, hidden_size])
+		if use_gat:
+			self.gcn = GAT(in_channels, [hidden_size, hidden_size])
+		else:
+			self.gcn = GCN(in_channels, [hidden_size, hidden_size])
 		self.gcn = GCN(in_channels, [hidden_size, hidden_size])
 		self.lin_u = nn.Linear(2 * hidden_size + in_channels, hidden_size)
 		self.lin_r = nn.Linear(2 * hidden_size + in_channels, hidden_size)

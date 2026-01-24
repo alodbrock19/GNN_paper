@@ -6,6 +6,77 @@ import torch
 import torch.nn.functional as F
 
 
+def plot_loss_curves(train_losses, test_losses, save_path=None, title="Training and Testing Loss"):
+    """
+    Visualize training and testing loss curves over epochs.
+    
+    Parameters:
+    -----------
+    train_losses : list or array
+        Training loss values for each epoch
+    test_losses : list or array
+        Testing loss values for each epoch
+    save_path : str, optional
+        Path to save the figure. If provided, figure is saved with '_loss_curves.png' suffix.
+    title : str, optional
+        Title for the plot (default: "Training and Testing Loss")
+    """
+    # Set style
+    sns.set_style("whitegrid")
+    plt.figure(figsize=(12, 6))
+    
+    epochs = np.arange(1, len(train_losses) + 1)
+    
+    # Plot loss curves
+    plt.plot(epochs, train_losses, 'b-', linewidth=2, label='Training Loss', marker='o', markersize=4, alpha=0.7)
+    plt.plot(epochs, test_losses, 'r-', linewidth=2, label='Testing Loss', marker='s', markersize=4, alpha=0.7)
+    
+    # Formatting
+    plt.xlabel('Epoch', fontsize=12, fontweight='bold')
+    plt.ylabel('Loss', fontsize=12, fontweight='bold')
+    plt.title(title, fontsize=14, fontweight='bold')
+    plt.legend(fontsize=11, loc='best')
+    plt.grid(True, alpha=0.3)
+    
+    # Add best epoch marker
+    best_test_epoch = np.argmin(test_losses) + 1
+    best_test_loss = np.min(test_losses)
+    plt.plot(best_test_epoch, best_test_loss, 'g*', markersize=20, label=f'Best Test Loss (Epoch {best_test_epoch})')
+    plt.legend(fontsize=11, loc='best')
+    
+    # Add text annotation
+    plt.text(best_test_epoch, best_test_loss + 0.01 * max(test_losses), 
+             f'Best: {best_test_loss:.4f}', ha='center', fontsize=10, 
+             bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.5))
+    
+    plt.tight_layout()
+    
+    # Save figure if path is provided
+    if save_path:
+        import os
+        # Replace .pt extension with _loss_curves.png
+        plot_path = save_path.replace('.pt', '_loss_curves.png')
+        os.makedirs(os.path.dirname(plot_path), exist_ok=True)
+        plt.savefig(plot_path, dpi=150, bbox_inches='tight')
+        print(f"Loss curves plot saved to: {plot_path}")
+    
+    plt.show()
+    
+    # Print summary statistics
+    print(f"\n{'='*60}")
+    print("LOSS CURVES SUMMARY")
+    print(f"{'='*60}")
+    print(f"Total epochs: {len(train_losses)}")
+    print(f"Final training loss: {train_losses[-1]:.4f}")
+    print(f"Final testing loss: {test_losses[-1]:.4f}")
+    print(f"Best testing loss: {best_test_loss:.4f} (Epoch {best_test_epoch})")
+    print(f"Initial training loss: {train_losses[0]:.4f}")
+    print(f"Initial testing loss: {test_losses[0]:.4f}")
+    print(f"Training loss improvement: {((train_losses[0] - train_losses[-1]) / train_losses[0] * 100):.2f}%")
+    print(f"Testing loss improvement: {((test_losses[0] - best_test_loss) / test_losses[0] * 100):.2f}%")
+    print(f"{'='*60}\n")
+
+
 def plot_model_predictions(model, test_dataloader, device, save_path=None):
     """
     Visualize model predictions with comprehensive analysis plots (adapted for MST).
